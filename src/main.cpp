@@ -1,98 +1,144 @@
+/*
+ * This code programs an ESP32 as a BLE fightstick
+ *
+ * Before using, adjust the numOfButtons, buttonPins, physicalButtons, hatPins etc to suit your scenario
+ *
+ * If you're looking for a more compatible fighstick experience in games, try the xinput compatible fork at:
+ * https://github.com/Mystfit/ESP32-BLE-CompositeHID
+ *
+ */
+
 #include <Arduino.h>
+#include <BleGamepad.h> // https://github.com/lemmingDev/ESP32-BLE-Gamepad
 
-// Pin definitions
-#define RC_PIN_A 7  // RC servo input pin - Horizontal
-#define RC_PIN_B 15  // RC servo input pin - Vertical
+BleGamepad bleGamepad("BLE Fightstick", "lemmingDev", 100);
 
-// Variables to store RC servo readings for channel A (Horizontal)
-volatile unsigned long pulseStartTimeA = 0;
-volatile unsigned long pulseWidthA = 0;
-volatile boolean newPulseAvailableA = false;
+#define numOfButtons 11
+#define numOfHats 1 // Maximum 4 hat switches supported
 
-// Variables to store RC servo readings for channel B (Vertical)
-volatile unsigned long pulseStartTimeB = 0;
-volatile unsigned long pulseWidthB = 0;
-volatile boolean newPulseAvailableB = false;
+byte previousButtonStates[numOfButtons];
+byte currentButtonStates[numOfButtons];
+byte buttonPins[numOfButtons] = {13, 14, 15, 16, 17, 18, 19, 21, 22, 23, 25};
+byte physicalButtons[numOfButtons] = {1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11};
 
-// Interrupt service routine for RC pulse measurement - Channel A
-void IRAM_ATTR rcInterruptA() {
-  // If the pin is high, it's the start of the pulse
-  if (digitalRead(RC_PIN_A) == HIGH) {
-    pulseStartTimeA = micros();
-  } else {
-    // If the pin is low, it's the end of the pulse
-    if (pulseStartTimeA != 0) {
-      pulseWidthA = micros() - pulseStartTimeA;
-      newPulseAvailableA = true;
+byte previousHatStates[numOfHats * 4];
+byte currentHatStates[numOfHats * 4];
+byte hatPins[numOfHats * 4] = {26, 27, 32, 33}; // In order UP, LEFT, DOWN, RIGHT. 4 pins per hat switch (Eg. List 12 pins if there are 3 hat switches)
+
+void setup()
+{
+    // Setup Buttons
+    for (byte currentPinIndex = 0; currentPinIndex < numOfButtons; currentPinIndex++)
+    {
+        pinMode(buttonPins[currentPinIndex], INPUT_PULLUP);
+        previousButtonStates[currentPinIndex] = HIGH;
+        currentButtonStates[currentPinIndex] = HIGH;
     }
-  }
-}
 
-// Interrupt service routine for RC pulse measurement - Channel B
-void IRAM_ATTR rcInterruptB() {
-  // If the pin is high, it's the start of the pulse
-  if (digitalRead(RC_PIN_B) == HIGH) {
-    pulseStartTimeB = micros();
-  } else {
-    // If the pin is low, it's the end of the pulse
-    if (pulseStartTimeB != 0) {
-      pulseWidthB = micros() - pulseStartTimeB;
-      newPulseAvailableB = true;
+    // Setup Hat Switches
+    for (byte currentPinIndex = 0; currentPinIndex < numOfHats * 4; currentPinIndex++)
+    {
+        pinMode(hatPins[currentPinIndex], INPUT_PULLUP);
+        previousHatStates[currentPinIndex] = HIGH;
+        currentHatStates[currentPinIndex] = HIGH;
     }
-  }
+
+    BleGamepadConfiguration bleGamepadConfig;
+    bleGamepadConfig.setAutoReport(false);
+    bleGamepadConfig.setWhichAxes(0, 0, 0, 0, 0, 0, 0, 0); // Disable all axes
+    bleGamepadConfig.setButtonCount(numOfButtons);
+    bleGamepadConfig.setHatSwitchCount(numOfHats);
+    bleGamepad.begin(&bleGamepadConfig);
+
+    // changing bleGamepadConfig after the begin function has no effect, unless you call the begin function again
 }
 
-void setup() {
-  // Initialize serial communication
-  Serial.begin(115200);
-  delay(1000); // Give the serial monitor time to connect
-  
-  Serial.println("ESP32-S3 Dual RC Channel Reader");
-  Serial.println("Reading horizontal on pin 7, vertical on pin 8");
-  
-  // Configure the RC pins as input
-  pinMode(RC_PIN_A, INPUT);
-  pinMode(RC_PIN_B, INPUT);
-  
-  // Attach interrupts to the RC pins for both rising and falling edges
-  attachInterrupt(digitalPinToInterrupt(RC_PIN_A), rcInterruptA, CHANGE);
-  attachInterrupt(digitalPinToInterrupt(RC_PIN_B), rcInterruptB, CHANGE);
-}
+void loop()
+{
+    if (bleGamepad.isConnected())
+    {
+        // Deal with buttons
+        for (byte currentIndex = 0; currentIndex < numOfButtons; currentIndex++)
+        {
+            currentButtonStates[currentIndex] = digitalRead(buttonPins[currentIndex]);
 
-void loop() {
-  // Local variables to store calculated percentages
-  int percentA = 0;
-  int percentB = 0;
-  
-  // Process new pulse from channel A if available
-  if (newPulseAvailableA) {
-    // Calculate percentage (assuming standard 1000-2000μs range)
-    percentA = map(pulseWidthA, 1000, 2000, 0, 100);
-    // Constrain to valid range
-    percentA = constrain(percentA, 0, 100);
-    // Reset the flag
-    newPulseAvailableA = false;
-  }
-  
-  // Process new pulse from channel B if available
-  if (newPulseAvailableB) {
-    // Calculate percentage (assuming standard 1000-2000μs range)
-    percentB = map(pulseWidthB, 1000, 2000, 0, 100);
-    // Constrain to valid range
-    percentB = constrain(percentB, 0, 100);
-    // Reset the flag
-    newPulseAvailableB = false;
-  }
-  
-  // Print the values in the requested format
-  Serial.print("A: ");
-  Serial.print(percentA);
-  Serial.print(" %    ");
-  
-  Serial.print("B: ");
-  Serial.print(percentB);
-  Serial.println(" %");
-  
-  // Short delay to prevent flooding the serial monitor
-  delay(100);
+            if (currentButtonStates[currentIndex] != previousButtonStates[currentIndex])
+            {
+                if (currentButtonStates[currentIndex] == LOW)
+                {
+                    bleGamepad.press(physicalButtons[currentIndex]);
+                }
+                else
+                {
+                    bleGamepad.release(physicalButtons[currentIndex]);
+                }
+            }
+        }
+
+        // Update hat switch pin states
+        for (byte currentHatPinsIndex = 0; currentHatPinsIndex < numOfHats * 4; currentHatPinsIndex++)
+        {
+            currentHatStates[currentHatPinsIndex] = digitalRead(hatPins[currentHatPinsIndex]);
+        }
+
+        // Update hats
+        signed char hatValues[4] = {0, 0, 0, 0};
+
+        for (byte currentHatIndex = 0; currentHatIndex < numOfHats; currentHatIndex++)
+        {
+            signed char hatValueToSend = 0;
+
+            for (byte currentHatPin = 0; currentHatPin < 4; currentHatPin++)
+            {
+                // Check for direction
+                if (currentHatStates[currentHatPin + currentHatIndex * 4] == LOW)
+                {
+                    hatValueToSend = currentHatPin * 2 + 1;
+
+                    // Account for last diagonal
+                    if (currentHatPin == 0)
+                    {
+                        if (currentHatStates[currentHatIndex * 4 + 3] == LOW)
+                        {
+                            hatValueToSend = 8;
+                            break;
+                        }
+                    }
+
+                    // Account for first 3 diagonals
+                    if (currentHatPin < 3)
+                    {
+                        if (currentHatStates[currentHatPin + currentHatIndex * 4 + 1] == LOW)
+                        {
+                            hatValueToSend += 1;
+                            break;
+                        }
+                    }
+                }
+            }
+
+            hatValues[currentHatIndex] = hatValueToSend;
+        }
+
+        // Set hat values
+        bleGamepad.setHats(hatValues[0], hatValues[1], hatValues[2], hatValues[3]);
+
+        // Update previous states to current states and send report
+        if ((memcmp((const void *)currentButtonStates, (const void *)previousButtonStates, sizeof(currentButtonStates)) != 0) && (memcmp((const void *)currentHatStates, (const void *)previousHatStates, sizeof(currentHatStates)) != 0))
+        {
+            for (byte currentIndex = 0; currentIndex < numOfButtons; currentIndex++)
+            {
+                previousButtonStates[currentIndex] = currentButtonStates[currentIndex];
+            }
+
+            for (byte currentIndex = 0; currentIndex < numOfHats * 4; currentIndex++)
+            {
+                previousHatStates[currentIndex] = currentHatStates[currentIndex];
+            }
+
+            bleGamepad.sendReport(); // Send a report if any of the button states or hat directions have changed
+        }
+
+        delay(10); // Reduce for less latency
+    }
 }
