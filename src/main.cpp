@@ -53,8 +53,8 @@
  byte physicalToXboxButtonMap[PHYSICAL_BUTTON_COUNT] = {BUTTON_A, BUTTON_B};
  
  // Standard axes range for Xbox controller
- #define AXIS_MIN 0x8001      // -32767 in hex
- #define AXIS_MAX 0x7FFF      // 32767 in hex
+ #define AXIS_MIN -32767      // Min axis value (defined in decimal for clarity)
+ #define AXIS_MAX 32767       // Max axis value (defined in decimal for clarity)
  
  // Trigger range for Xbox controller (0 to 255)
  #define TRIGGER_MIN 0
@@ -114,8 +114,27 @@
    // Constrain PWM value to valid range
    pwmValue = constrain(pwmValue, PWM_MIN, PWM_MAX);
    
-   // Map PWM range to axis range
-   return map(pwmValue, PWM_MIN, PWM_MAX, AXIS_MIN, AXIS_MAX);
+   // Manual mapping calculations with long integers to avoid overflow
+   long result;
+   
+   // For values less than center
+   if (pwmValue < PWM_CENTER - PWM_DEADZONE) {
+     // Map from [PWM_MIN, PWM_CENTER-DEADZONE] to [AXIS_MIN, 0]
+     result = (long)(pwmValue - PWM_MIN);
+     result *= (long)(0 - AXIS_MIN);
+     result /= (long)((PWM_CENTER - PWM_DEADZONE) - PWM_MIN);
+     result += AXIS_MIN;
+     return (int)result;
+   } else if (pwmValue > PWM_CENTER + PWM_DEADZONE) {
+     // Map from [PWM_CENTER+DEADZONE, PWM_MAX] to [0, AXIS_MAX]
+     result = (long)(pwmValue - (PWM_CENTER + PWM_DEADZONE));
+     result *= (long)AXIS_MAX;
+     result /= (long)(PWM_MAX - (PWM_CENTER + PWM_DEADZONE));
+     return (int)result;
+   } else {
+     // Within deadzone (should have been caught by the first check, but just in case)
+     return 0;
+   }
  }
  
  // Map PWM (1000-2000μs) to trigger value (0 to 255)
@@ -211,7 +230,8 @@
            Serial.print(": ");
            Serial.print(pwmValues[i]);
            Serial.print(" μs, Mapped: ");
-           Serial.println(mapPWMToAxis(pwmValues[i]));
+           int mappedValue = mapPWMToAxis(pwmValues[i]);
+           Serial.println(mappedValue);
          }
        }
      }
