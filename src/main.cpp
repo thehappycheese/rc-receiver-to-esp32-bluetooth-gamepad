@@ -1,8 +1,8 @@
 /*
- * ESP32 BLE Controller with Xbox Controller Spoofing
+ * ESP32 BLE Controller with Xbox Controller Spoofing and Improved PWM Reading
  * 
  * This code programs an ESP32 as a BLE gamepad that mimics an Xbox controller
- * while actually reading 4 servo PWM signals from pins 4, 5, 6, and 7,
+ * while reading 4 servo PWM signals from pins 4, 5, 6, and 7,
  * mapping them to Left Stick X/Y and Right Stick X/Y.
  * Also supports 2 physical buttons on pins 1 and 2.
  */
@@ -38,11 +38,12 @@
  #define PWM_MIN 1000      // Minimum PWM pulse width (1000μs = 1ms)
  #define PWM_MAX 2000      // Maximum PWM pulse width (2000μs = 2ms)
  #define PWM_CENTER 1500   // Center PWM pulse width (1500μs = 1.5ms)
+ #define PWM_DEADZONE 50   // Deadzone to prevent jitter (in μs)
  
  // PWM Input Pins
  byte pwmPins[numOfPWMInputs] = {4, 5, 6, 7}; // Pins to read PWM signals from
- int pwmValues[numOfPWMInputs] = {0, 0, 0, 0}; // Current PWM values
- int previousPwmValues[numOfPWMInputs] = {0, 0, 0, 0}; // Previous PWM values
+ unsigned long pwmValues[numOfPWMInputs] = {PWM_CENTER, PWM_CENTER, PWM_CENTER, PWM_CENTER}; // Current PWM values
+ unsigned long previousPwmValues[numOfPWMInputs] = {PWM_CENTER, PWM_CENTER, PWM_CENTER, PWM_CENTER}; // Previous PWM values
  
  // Physical buttons
  byte buttonPins[PHYSICAL_BUTTON_COUNT] = {1, 2};
@@ -59,36 +60,61 @@
  #define TRIGGER_MIN 0
  #define TRIGGER_MAX 255
  
+ // Variables for interrupt-based PWM reading
+ volatile unsigned long pwmStartTime[numOfPWMInputs] = {0, 0, 0, 0};
+ volatile unsigned long pwmDuration[numOfPWMInputs] = {0, 0, 0, 0};
+ volatile bool pwmUpdated[numOfPWMInputs] = {false, false, false, false};
+ 
  BleGamepad bleGamepad("Xbox Controller", "ESP32", 100);
  
- // Function to read PWM pulse width from a pin
- unsigned long readPWM(int pin) {
-   // Wait for the signal to go HIGH (with timeout)
-   unsigned long startWait = micros();
-   while (digitalRead(pin) == LOW) {
-     if (micros() - startWait > 25000) {  // 25ms timeout
-       return PWM_CENTER; // Return center value if timeout
-     }
+ // PWM pin change ISRs (Interrupt Service Routines)
+ void IRAM_ATTR pwmISR0() {
+   if (digitalRead(pwmPins[0]) == HIGH) {
+     pwmStartTime[0] = micros();
+   } else {
+     pwmDuration[0] = micros() - pwmStartTime[0];
+     pwmUpdated[0] = true;
    }
-   
-   // Start timing when signal goes HIGH
-   unsigned long start = micros();
-   
-   // Wait for the signal to go LOW (with timeout)
-   startWait = micros();
-   while (digitalRead(pin) == HIGH) {
-     if (micros() - startWait > 25000) {  // 25ms timeout
-       return PWM_CENTER; // Return center value if timeout
-     }
+ }
+ 
+ void IRAM_ATTR pwmISR1() {
+   if (digitalRead(pwmPins[1]) == HIGH) {
+     pwmStartTime[1] = micros();
+   } else {
+     pwmDuration[1] = micros() - pwmStartTime[1];
+     pwmUpdated[1] = true;
    }
-   
-   // Return the pulse width in microseconds
-   return micros() - start;
+ }
+ 
+ void IRAM_ATTR pwmISR2() {
+   if (digitalRead(pwmPins[2]) == HIGH) {
+     pwmStartTime[2] = micros();
+   } else {
+     pwmDuration[2] = micros() - pwmStartTime[2];
+     pwmUpdated[2] = true;
+   }
+ }
+ 
+ void IRAM_ATTR pwmISR3() {
+   if (digitalRead(pwmPins[3]) == HIGH) {
+     pwmStartTime[3] = micros();
+   } else {
+     pwmDuration[3] = micros() - pwmStartTime[3];
+     pwmUpdated[3] = true;
+   }
  }
  
  // Map PWM (1000-2000μs) to axes value (-32767 to 32767)
  int mapPWMToAxis(unsigned long pwmValue) {
+   // Apply deadzone around center
+   if (pwmValue > PWM_CENTER - PWM_DEADZONE && pwmValue < PWM_CENTER + PWM_DEADZONE) {
+     return 0;
+   }
+   
+   // Constrain PWM value to valid range
    pwmValue = constrain(pwmValue, PWM_MIN, PWM_MAX);
+   
+   // Map PWM range to axis range
    return map(pwmValue, PWM_MIN, PWM_MAX, AXIS_MIN, AXIS_MAX);
  }
  
@@ -102,10 +128,16 @@
    Serial.begin(115200);
    Serial.println("Starting ESP32 BLE Xbox Controller!");
  
-   // Setup PWM Input Pins
+   // Setup PWM Input Pins and attach interrupts
    for (byte i = 0; i < numOfPWMInputs; i++) {
      pinMode(pwmPins[i], INPUT);
    }
+   
+   // Attach interrupts to PWM pins
+   attachInterrupt(digitalPinToInterrupt(pwmPins[0]), pwmISR0, CHANGE);
+   attachInterrupt(digitalPinToInterrupt(pwmPins[1]), pwmISR1, CHANGE);
+   attachInterrupt(digitalPinToInterrupt(pwmPins[2]), pwmISR2, CHANGE);
+   attachInterrupt(digitalPinToInterrupt(pwmPins[3]), pwmISR3, CHANGE);
    
    // Setup Button Pins
    for (byte i = 0; i < PHYSICAL_BUTTON_COUNT; i++) {
@@ -147,22 +179,40 @@
    bleGamepad.setHat1(0);     // D-pad centered
    
    Serial.println("ESP32 BLE Xbox Controller initialized!");
+   Serial.println("PWM pins configured for interrupt-based reading");
  }
  
  void loop() {
    if (bleGamepad.isConnected()) {
      bool valueChanged = false;
      
-     // Read PWM values and update axes
+     // Process PWM readings from interrupts
      for (byte i = 0; i < numOfPWMInputs; i++) {
-       // Read PWM value from pin
-       unsigned long pwmValue = readPWM(pwmPins[i]);
-       pwmValues[i] = pwmValue;
-       
-       // Check if value has changed significantly (to reduce unnecessary updates)
-       if (abs(pwmValues[i] - previousPwmValues[i]) > 5) {
-         valueChanged = true;
-         previousPwmValues[i] = pwmValues[i];
+       // Check if PWM value was updated by interrupt
+       if (pwmUpdated[i]) {
+         // Get the PWM value that was measured by the interrupt
+         pwmValues[i] = pwmDuration[i];
+         pwmUpdated[i] = false;
+         
+         // Validate PWM value (reject extremes that might be errors)
+         if (pwmValues[i] < 500 || pwmValues[i] > 2500) {
+           // Invalid PWM value, use previous valid value
+           pwmValues[i] = previousPwmValues[i];
+         }
+         
+         // Check if value has changed significantly
+         if (abs((long)pwmValues[i] - (long)previousPwmValues[i]) > 10) {
+           valueChanged = true;
+           previousPwmValues[i] = pwmValues[i];
+           
+           // Debug output 
+           Serial.print("PWM ");
+           Serial.print(i);
+           Serial.print(": ");
+           Serial.print(pwmValues[i]);
+           Serial.print(" μs, Mapped: ");
+           Serial.println(mapPWMToAxis(pwmValues[i]));
+         }
        }
      }
      
@@ -172,16 +222,20 @@
        // You can adjust this mapping based on your needs
        
        // Left Stick X (first PWM input)
-       bleGamepad.setX(mapPWMToAxis(pwmValues[0]));
+       int xVal = mapPWMToAxis(pwmValues[0]);
+       bleGamepad.setX(xVal);
        
-       // Left Stick Y (second PWM input)
-       bleGamepad.setY(mapPWMToAxis(pwmValues[1]));
+       // Left Stick Y (second PWM input) - invert for standard joystick orientation
+       int yVal = -mapPWMToAxis(pwmValues[1]);  // Invert Y axis
+       bleGamepad.setY(yVal);
        
        // Right Stick X (third PWM input)
-       bleGamepad.setZ(mapPWMToAxis(pwmValues[2]));
+       int zVal = mapPWMToAxis(pwmValues[2]);
+       bleGamepad.setZ(zVal);
        
-       // Right Stick Y (fourth PWM input)
-       bleGamepad.setRZ(mapPWMToAxis(pwmValues[3]));
+       // Right Stick Y (fourth PWM input) - invert for standard joystick orientation
+       int rzVal = -mapPWMToAxis(pwmValues[3]);  // Invert Y axis
+       bleGamepad.setRZ(rzVal);
        
        // NOTE: Not physically reading triggers, setting them to 0
        bleGamepad.setRX(0); // Left trigger
@@ -189,14 +243,6 @@
        
        // Send report
        bleGamepad.sendReport();
-       
-       // Debug output
-       Serial.print("PWM Values: ");
-       for (byte i = 0; i < numOfPWMInputs; i++) {
-         Serial.print(pwmValues[i]);
-         Serial.print(" ");
-       }
-       Serial.println();
      }
      
      // Read physical button states
@@ -230,7 +276,7 @@
      }
      
      // Small delay to reduce CPU usage
-     delay(10);
+     delay(5);
    } else {
      // Not connected - wait a bit longer
      Serial.println("Waiting for BLE connection...");
@@ -243,9 +289,9 @@
   * 
   * 1. Connect your servo PWM signals to pins 4, 5, 6, and 7:
   *    - Pin 4: Left Stick X-axis (corresponds to setX in the code)
-  *    - Pin 5: Left Stick Y-axis (corresponds to setY in the code)
+  *    - Pin 5: Left Stick Y-axis (corresponds to setY in the code, inverted)
   *    - Pin 6: Right Stick X-axis (corresponds to setZ in the code)
-  *    - Pin 7: Right Stick Y-axis (corresponds to setRZ in the code)
+  *    - Pin 7: Right Stick Y-axis (corresponds to setRZ in the code, inverted)
   * 
   * 2. For hardware buttons:
   *    - Connect one terminal of button 1 to pin 1 (maps to Xbox A button)
@@ -256,4 +302,8 @@
   * 3. Make sure to provide appropriate power to the ESP32
   *    - USB power is usually sufficient for testing
   *    - For portable use, a 3.7V LiPo battery with appropriate regulation is recommended
+  *
+  * NOTE: Make sure the pins you are using (4, 5, 6, 7) support interrupts on the ESP32.
+  * If you have issues, check which pins on your specific ESP32 board support interrupts
+  * and modify the pwmPins array accordingly.
   */
