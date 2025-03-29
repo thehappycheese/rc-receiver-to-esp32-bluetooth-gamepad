@@ -1,0 +1,672 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<svg
+   viewBox="0 0 800 600"
+   version="1.1"
+   id="svg59"
+   sodipodi:docname="esp32-schematic.svg"
+   inkscape:version="1.3.2 (091e20e, 2023-11-25, custom)"
+   xmlns:inkscape="http://www.inkscape.org/namespaces/inkscape"
+   xmlns:sodipodi="http://sodipodi.sourceforge.net/DTD/sodipodi-0.dtd"
+   xmlns="http://www.w3.org/2000/svg"
+   xmlns:svg="http://www.w3.org/2000/svg">
+  <defs
+     id="defs59" />
+  <sodipodi:namedview
+     id="namedview59"
+     pagecolor="#ffffff"
+     bordercolor="#000000"
+     borderopacity="0.25"
+     inkscape:showpageshadow="2"
+     inkscape:pageopacity="0.0"
+     inkscape:pagecheckerboard="0"
+     inkscape:deskcolor="#d1d1d1"
+     showguides="true"
+     inkscape:zoom="1.3496901"
+     inkscape:cx="484.55569"
+     inkscape:cy="213.01187"
+     inkscape:window-width="2560"
+     inkscape:window-height="1417"
+     inkscape:window-x="2552"
+     inkscape:window-y="-8"
+     inkscape:window-maximized="1"
+     inkscape:current-layer="svg59" />
+  <rect
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#2b2b2b;fill-opacity:1;stroke:none;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none"
+     id="rect87"
+     width="800"
+     height="600"
+     x="0"
+     y="0" />
+  <!-- Background -->
+  <!-- Title -->
+  <text
+     x="450.38196"
+     y="47.409107"
+     font-family="Arial"
+     font-size="24px"
+     text-anchor="middle"
+     font-weight="bold"
+     id="text1"
+     style="fill:#deddda">ESP32 BLE Xbox Controller Schematic</text>
+  <!-- ESP32 Development Board -->
+  <rect
+     x="276.29086"
+     y="78.131645"
+     width="200"
+     height="300"
+     fill="#d1d1e0"
+     stroke="#333333"
+     stroke-width="2"
+     rx="10"
+     ry="10"
+     id="rect2"
+     style="fill:#241f31;stroke:#5e5c64" />
+  <text
+     x="376.29086"
+     y="103.13165"
+     font-family="Arial"
+     font-size="18px"
+     text-anchor="middle"
+     id="text2"
+     style="fill:#deddda">ESP32</text>
+  <!-- ESP32 Pin Labels -->
+  <!-- Left side pins -->
+  <text
+     x="266.29086"
+     y="311.50479"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text3"
+     style="fill:#77767b;stroke:#deddda">5V</text>
+  <text
+     x="266.29086"
+     y="331.50479"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text4"
+     style="fill:#deddda">GND</text>
+  <text
+     x="266.29086"
+     y="174.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text5"
+     style="fill:#deddda">Pin 1</text>
+  <text
+     x="266.29086"
+     y="194.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text6"
+     style="fill:#deddda">Pin 2</text>
+  <text
+     x="266.29086"
+     y="218.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text7"
+     style="fill:#deddda">Pin 4</text>
+  <text
+     x="266.29086"
+     y="238.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text8"
+     style="fill:#deddda">Pin 5</text>
+  <text
+     x="266.29086"
+     y="258.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text9"
+     style="fill:#deddda">Pin 6</text>
+  <text
+     x="266.29086"
+     y="278.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text10"
+     style="fill:#deddda">Pin 7</text>
+  <!-- Pin circles on ESP32 -->
+  <circle
+     cx="276.29086"
+     cy="311.50479"
+     r="3"
+     fill="#ff0000"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle10"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="331.50479"
+     r="3"
+     fill="#000000"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle11"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="178.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle12"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="198.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle13"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="218.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle14"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="238.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle15"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="258.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle16"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="276.29086"
+     cy="278.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle17"
+     style="stroke:#deddda;fill:#241f31" />
+  <!-- Buttons -->
+  <!-- Button 1 (A) -->
+  <rect
+     x="96.290855"
+     y="168.13165"
+     width="40"
+     height="20"
+     fill="#aaaaaa"
+     stroke="#333333"
+     stroke-width="2"
+     rx="5"
+     ry="5"
+     id="rect17" />
+  <circle
+     cx="116.29086"
+     cy="178.13165"
+     r="8"
+     fill="#e74c3c"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle18" />
+  <text
+     x="116.29086"
+     y="182.13165"
+     font-family="Arial"
+     font-size="10px"
+     text-anchor="middle"
+     fill="#ffffff"
+     id="text18">A</text>
+  <text
+     x="116.29086"
+     y="158.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="middle"
+     id="text19"
+     style="fill:#deddda">Button 1</text>
+  <!-- Button 2 (B) -->
+  <rect
+     x="96.290855"
+     y="248.13165"
+     width="40"
+     height="20"
+     fill="#aaaaaa"
+     stroke="#333333"
+     stroke-width="2"
+     rx="5"
+     ry="5"
+     id="rect19" />
+  <circle
+     cx="116.29086"
+     cy="258.13165"
+     r="8"
+     fill="#e74c3c"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle19" />
+  <text
+     x="116.29086"
+     y="262.13165"
+     font-family="Arial"
+     font-size="10px"
+     text-anchor="middle"
+     fill="#ffffff"
+     id="text20">B</text>
+  <text
+     x="116.29086"
+     y="238.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="middle"
+     id="text21"
+     style="fill:#deddda">Button 2</text>
+  <!-- PWM Sources - Represented as RC receiver or servo controller -->
+  <rect
+     x="576.29083"
+     y="78.131645"
+     width="120"
+     height="245.93648"
+     fill="#b3d9ff"
+     stroke="#333333"
+     stroke-width="2.21782"
+     rx="5"
+     ry="5"
+     id="rect21"
+     style="fill:#241f31;stroke:#5e5c64" />
+  <text
+     x="636.29083"
+     y="103.13165"
+     font-family="Arial"
+     font-size="14px"
+     text-anchor="middle"
+     id="text22"
+     style="fill:#deddda">RC Receiver</text>
+  <!-- RC Receiver pins -->
+  <circle
+     cx="576.29083"
+     cy="158.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle23"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="576.29083"
+     cy="188.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle24"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="576.29083"
+     cy="218.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle25"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="576.29083"
+     cy="248.13165"
+     r="3"
+     fill="#333333"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle26"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="576.29083"
+     cy="278.13165"
+     r="3"
+     fill="#ff0000"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle27"
+     style="stroke:#deddda;fill:#241f31" />
+  <circle
+     cx="576.29083"
+     cy="308.13165"
+     r="3"
+     fill="#000000"
+     stroke="#333333"
+     stroke-width="1"
+     id="circle28"
+     style="stroke:#deddda;fill:#241f31" />
+  <!-- RC Receiver pin labels -->
+  <text
+     x="566.29083"
+     y="158.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text28"
+     style="fill:#deddda">Ch1</text>
+  <text
+     x="566.29083"
+     y="188.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text29"
+     style="fill:#deddda">Ch2</text>
+  <text
+     x="566.29083"
+     y="218.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text30"
+     style="fill:#deddda">Ch3</text>
+  <text
+     x="566.29083"
+     y="248.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text31"
+     style="fill:#deddda">Ch4</text>
+  <text
+     x="566.29083"
+     y="278.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text32"
+     style="fill:#deddda">VCC</text>
+  <text
+     x="566.29083"
+     y="308.13165"
+     font-family="Arial"
+     font-size="12px"
+     text-anchor="end"
+     id="text33"
+     style="fill:#deddda">GND</text>
+  <!-- Joystick labels -->
+  <text
+     x="590.34058"
+     y="158.13165"
+     font-family="Arial"
+     font-size="10px"
+     text-anchor="start"
+     id="text34"
+     style="fill:#deddda">Right Stick X</text>
+  <text
+     x="590.34058"
+     y="188.13165"
+     font-family="Arial"
+     font-size="10px"
+     text-anchor="start"
+     id="text35"
+     style="fill:#deddda">Right Stick Y</text>
+  <text
+     x="590.34058"
+     y="218.13165"
+     font-family="Arial"
+     font-size="10px"
+     text-anchor="start"
+     id="text36"
+     style="fill:#deddda">Left Stick X</text>
+  <text
+     x="590.34058"
+     y="248.13165"
+     font-family="Arial"
+     font-size="10px"
+     text-anchor="start"
+     id="text37"
+     style="fill:#deddda">Left Stick Y</text>
+  <!-- Connection lines -->
+  <!-- Button connections -->
+  <line
+     x1="136.29085"
+     y1="178.13165"
+     x2="276.29086"
+     y2="178.13165"
+     stroke="#333333"
+     stroke-width="1.5"
+     id="line41"
+     style="fill:none;stroke:#deddda" />
+  <line
+     x1="136.29085"
+     y1="258.13165"
+     x2="176.29085"
+     y2="258.13165"
+     stroke="#333333"
+     stroke-width="1.5"
+     id="line42"
+     style="fill:none;stroke:#deddda" />
+  <path
+     id="line43"
+     style="stroke:#deddda;stroke-width:1.5;fill:none"
+     d="m 176.29085,258.13165 v -60"
+     sodipodi:nodetypes="cc" />
+  <path
+     id="line44"
+     style="stroke:#deddda;stroke-width:1.5;fill:none"
+     d="m 176.29085,198.13165 h 100"
+     sodipodi:nodetypes="cc" />
+  <!-- PWM connections -->
+  <line
+     x1="576.29083"
+     y1="158.13165"
+     x2="276.29086"
+     y2="218.13165"
+     stroke="#ff9933"
+     stroke-width="1.5"
+     id="line45" />
+  <line
+     x1="576.29083"
+     y1="188.13165"
+     x2="276.29086"
+     y2="238.13165"
+     stroke="#33cc33"
+     stroke-width="1.5"
+     id="line46" />
+  <line
+     x1="576.29083"
+     y1="218.13165"
+     x2="276.29086"
+     y2="258.13165"
+     stroke="#3399ff"
+     stroke-width="1.5"
+     id="line47" />
+  <line
+     x1="576.29083"
+     y1="248.13165"
+     x2="276.29086"
+     y2="278.13165"
+     stroke="#cc33ff"
+     stroke-width="1.5"
+     id="line48" />
+  <!-- Power lines -->
+  <path
+     id="line49"
+     style="stroke:#ff0000;stroke-width:1.5"
+     d="M 576.29083,278.13165 276.29086,311.46843"
+     sodipodi:nodetypes="cc" />
+  <path
+     id="line50"
+     style="stroke:#77767b;stroke-width:1.5;fill:none"
+     d="M 576.29083,308.13165 276.29086,331.46843"
+     sodipodi:nodetypes="cc" />
+  <!-- Legend -->
+  <!-- Notes -->
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-decoration-color:#000000;fill:#deddda;stroke:none;stroke-width:0.377953;stroke-linecap:round;stroke-linejoin:round"
+     x="53.345585"
+     y="388.97821"
+     id="text68"><tspan
+       sodipodi:role="line"
+       id="tspan68"
+       x="53.345585"
+       y="388.97821">Notes:</tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="405.64484"
+       id="tspan75">1. All buttons connect to GND when pressed (INPUT_PULLUP used).</tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="422.31146"
+       id="tspan76">2. PWM signals from RC receiver should be in 1000-2000μs range.</tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="438.97809"
+       id="tspan77">3. ESP32 provides BLE emulation of an Xbox controller.</tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="455.64471"
+       id="tspan78">4. 5V out may not be avaliable on ESP32 board (some boards have a jumper)</tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="472.31134"
+       id="tspan69"></tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="488.97797"
+       id="tspan70"></tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="505.64459"
+       id="tspan71"></tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="522.31122"
+       id="tspan72"></tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="538.97784"
+       id="tspan73"></tspan><tspan
+       sodipodi:role="line"
+       x="53.345585"
+       y="555.64447"
+       id="tspan74" /></text>
+  <g
+     id="g81"
+     transform="translate(-242.17719,335.37244)"
+     style="stroke:#deddda">
+    <circle
+       style="fill:none;stroke:#deddda;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       id="path79"
+       cx="739.42902"
+       cy="203.75047"
+       r="30.377344" />
+    <path
+       style="fill:none;stroke:#deddda;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="M 739.42902,152.4819 V 255.01904"
+       id="path81" />
+    <path
+       style="fill:none;stroke:#deddda;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="M 790.69759,203.75047 H 688.16045"
+       id="path81-4" />
+  </g>
+  <g
+     id="g81-0"
+     transform="translate(-107.64005,335.37244)"
+     style="stroke:#deddda">
+    <circle
+       style="fill:none;stroke:#deddda;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       id="path79-7"
+       cx="739.42902"
+       cy="203.75047"
+       r="30.377344" />
+    <path
+       style="fill:none;stroke:#deddda;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="M 739.42902,152.4819 V 255.01904"
+       id="path81-5" />
+    <path
+       style="fill:none;stroke:#deddda;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+       d="M 790.69759,203.75047 H 688.16045"
+       id="path81-4-5" />
+  </g>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-decoration-color:#000000;fill:#deddda;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     x="503.58777"
+     y="490.56134"
+     id="text81"><tspan
+       sodipodi:role="line"
+       id="tspan81"
+       x="503.58777"
+       y="490.56134">Ch3 - Throttle</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-decoration-color:#000000;fill:#deddda;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     x="638.12488"
+     y="490.56134"
+     id="text81-8"><tspan
+       sodipodi:role="line"
+       id="tspan81-3"
+       x="638.12488"
+       y="490.56134">Ch2</tspan><tspan
+       sodipodi:role="line"
+       x="638.12488"
+       y="507.22797"
+       id="tspan84">Pitch / Elevator</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-decoration-color:#000000;fill:#deddda;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     x="689.39349"
+     y="534.56171"
+     id="text81-8-4"><tspan
+       sodipodi:role="line"
+       id="tspan81-3-5"
+       x="689.39349"
+       y="534.56171">Ch1</tspan><tspan
+       sodipodi:role="line"
+       x="689.39349"
+       y="551.22833"
+       id="tspan85">Roll / Ailerons</tspan></text>
+  <text
+     xml:space="preserve"
+     style="font-size:13.3333px;line-height:normal;font-family:Arial;-inkscape-font-specification:'Arial, Normal';text-align:end;text-decoration-color:#000000;text-anchor:end;fill:#deddda;stroke:none;stroke-width:2;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:none"
+     x="438.80096"
+     y="535.56171"
+     id="text81-5"><tspan
+       sodipodi:role="line"
+       id="tspan81-9"
+       x="438.80096"
+       y="535.56171">Ch4</tspan><tspan
+       sodipodi:role="line"
+       x="438.80096"
+       y="552.22833"
+       id="tspan82">Yaw / Rudder</tspan></text>
+  <path
+     style="fill:none;stroke:#deddda;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-dasharray:none;font-variation-settings:normal;opacity:1;vector-effect:none;fill-opacity:1;stroke-miterlimit:4;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     d="M 276.29086,331.50479 H 71.868351 V 215.97551 h 43.713739 v -27.84386"
+     id="path85" />
+  <path
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:none;fill-opacity:1;stroke:#deddda;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none;stop-color:#000000;stop-opacity:1"
+     d="m 115.52063,331.63065 v -63.499"
+     id="path86" />
+  <circle
+     style="font-variation-settings:normal;opacity:1;vector-effect:none;fill:#deddda;fill-opacity:1;stroke:#241f31;stroke-width:1.5;stroke-linecap:butt;stroke-linejoin:miter;stroke-miterlimit:4;stroke-dasharray:none;stroke-dashoffset:0;stroke-opacity:1;-inkscape-stroke:none"
+     id="path87"
+     cx="115.52063"
+     cy="331.50479"
+     r="2.8814669" />
+</svg>

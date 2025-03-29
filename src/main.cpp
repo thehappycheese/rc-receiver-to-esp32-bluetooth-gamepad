@@ -239,24 +239,18 @@
      // Map PWM values to Xbox controller axes
      if (valueChanged) {
        // Map first 4 PWM inputs to controller axes
-       // You can adjust this mapping based on your needs
-       
-       // Left Stick X (first PWM input)
        int L_x = mapPWMToAxis(pwmValues[2]);
-       int L_y = mapPWMToAxis(pwmValues[3]);  // Invert Y axis
+       int L_y = -mapPWMToAxis(pwmValues[3]);
+       int R_x = mapPWMToAxis(pwmValues[0]);
+       int R_y = -mapPWMToAxis(pwmValues[1]);
        
-       // Right Stick
-       int R_x = mapPWMToAxis(pwmValues[1]);
-       int R_y = mapPWMToAxis(pwmValues[0]);  // Invert Y axis
-       // NOTE: Not physically reading triggers, setting them to 0
-       bleGamepad.setX(0); // 0
-       bleGamepad.setY(0); // 1
-       bleGamepad.setZ(R_x); // 2
-       // Left trigger
-       bleGamepad.setRX(L_x);  // 3
-       // Right trigger
-       bleGamepad.setRY(-L_y); // 4
-       bleGamepad.setRZ(-R_y); // 5
+       // NOTE: mapping to xbox axes doesn't make much sense reading the axis names below:
+       bleGamepad.setX(0);
+       bleGamepad.setY(0);
+       bleGamepad.setZ(R_x);
+       bleGamepad.setRX(L_x);
+       bleGamepad.setRY(L_y);
+       bleGamepad.setRZ(R_y);
 
        
        // Send report
