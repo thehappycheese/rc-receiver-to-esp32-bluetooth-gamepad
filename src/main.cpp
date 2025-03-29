@@ -192,9 +192,9 @@
    bleGamepad.setX(0);        // Left stick X
    bleGamepad.setY(0);        // Left stick Y
    bleGamepad.setZ(0);        // Right stick X
-   bleGamepad.setRZ(0);       // Right stick Y
    bleGamepad.setRX(0);       // Left trigger
    bleGamepad.setRY(0);       // Right trigger
+   bleGamepad.setRZ(0);       // Right stick Y
    bleGamepad.setHat1(0);     // D-pad centered
    
    Serial.println("ESP32 BLE Xbox Controller initialized!");
@@ -242,24 +242,22 @@
        // You can adjust this mapping based on your needs
        
        // Left Stick X (first PWM input)
-       int xVal = mapPWMToAxis(pwmValues[0]);
-       bleGamepad.setX(xVal);
+       int L_x = mapPWMToAxis(pwmValues[2]);
+       int L_y = mapPWMToAxis(pwmValues[3]);  // Invert Y axis
        
-       // Left Stick Y (second PWM input) - invert for standard joystick orientation
-       int yVal = -mapPWMToAxis(pwmValues[1]);  // Invert Y axis
-       bleGamepad.setY(yVal);
-       
-       // Right Stick X (third PWM input)
-       int zVal = mapPWMToAxis(pwmValues[2]);
-       bleGamepad.setZ(zVal);
-       
-       // Right Stick Y (fourth PWM input) - invert for standard joystick orientation
-       int rzVal = -mapPWMToAxis(pwmValues[3]);  // Invert Y axis
-       bleGamepad.setRZ(rzVal);
-       
+       // Right Stick
+       int R_x = mapPWMToAxis(pwmValues[1]);
+       int R_y = mapPWMToAxis(pwmValues[0]);  // Invert Y axis
        // NOTE: Not physically reading triggers, setting them to 0
-       bleGamepad.setRX(0); // Left trigger
-       bleGamepad.setRY(0); // Right trigger
+       bleGamepad.setX(0); // 0
+       bleGamepad.setY(0); // 1
+       bleGamepad.setZ(R_x); // 2
+       // Left trigger
+       bleGamepad.setRX(L_x);  // 3
+       // Right trigger
+       bleGamepad.setRY(-L_y); // 4
+       bleGamepad.setRZ(-R_y); // 5
+
        
        // Send report
        bleGamepad.sendReport();
